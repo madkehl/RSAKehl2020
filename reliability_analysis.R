@@ -3,9 +3,7 @@ library(psych)
 library(dplyr)
 file1 <- read.csv('/Users/madke/downloads/MadelinesThesis_ForReliabilities.csv')
 
-
-file_df <- (file1) %>% mutate_all(scale)
-file_df <- data.frame(file_df)
+file_df <- data.frame(file1)
 #CSIV
 PA <- file_df %>% dplyr::select('CSIV01','CSIV09','CSIV17','CSIV25','CSIV33','CSIV41','CSIV49','CSIV57')
 BC <- file_df %>% dplyr::select('CSIV04','CSIV12','CSIV20','CSIV28','CSIV36','CSIV44','CSIV52','CSIV60')
@@ -47,11 +45,25 @@ om_JK = omega(JK, nfactors = 1)
 om_LM = omega(LM, nfactors = 1)
 om_NO = omega(NO, nfactors = 1)
 
+#iip
+circum <- cbind(rowSums(PA), rowSums(BC), rowSums(DE), rowSums(FG), rowSums(HI), rowSums(JK), rowSums(LM), rowSums(NO))
+circum <- data.frame(circum) %>% mutate_all(scale)
+
+colnames(circum) <- c('PA','BC', 'DE', 'FG', 'HI', 'JK', 'LM', 'NO')
+
+dom <-0.25((circum$PA - circum$HI) + (0.707*(circum$BC + circum$NO - circum$FG - circum$JK)))
+warm <-0.25*((circum$LM - circum$DE) + (0.707*(circum$JK + circum$NO - circum$FG - circum$BC)))
+
+
 #warmth
 w_sigwrelsc = (om_LM$omega.tot*1*1) + (om_DE$omega.tot*-1*-1) + (om_JK$omega.tot*0.707*0.707) + (om_NO$omega.tot*0.707*0.707) + (om_FG$omega.tot*-0.707*-0.707)+ (om_BC$omega.tot*-0.707*-0.707)
-w_var_axis = (var(warm_iip, na.rm = T))
-
+w_var_axis = (var(warm, na.rm = T))
 w_rel_axis = 1 - ((4 - w_sigwrelsc) /w_var_axis)
+
+d_sigwrelsc = (om_PA$omega.tot*1*1) + (om_HI$omega.tot*-1*-1) + (om_BC$omega.tot*0.707*0.707) + (om_NO$omega.tot*0.707*0.707) + (om_FG$omega.tot*-0.707*-0.707)+ (om_JK$omega.tot*-0.707*-0.707)
+d_var_axis = (var(dom, na.rm = T))
+d_rel_axis = 1 - ((4 - d_sigwrelsc) /d_var_axis)
+
 describe(file_df1$IIPSC_ELEV)
 describe(file_df1$IIPSC_LOV)
 describe(file_df1$IIPSC_DOM)
