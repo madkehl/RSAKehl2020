@@ -1,8 +1,9 @@
 library(psych)
-
 library(dplyr)
+
 file1 <- read.csv('/Users/madke/downloads/MadelinesThesis_ForReliabilities.csv')
 
+#reading these in with just octant labels to make bottom code more reusable
 file_df <- data.frame(file1)
 #CSIV
 PA <- file_df %>% dplyr::select('CSIV01','CSIV09','CSIV17','CSIV25','CSIV33','CSIV41','CSIV49','CSIV57')
@@ -36,6 +37,7 @@ LM <- file_df %>% dplyr::select('IIP07','IIP15','IIP23','IIP31')
 NO <- file_df %>% dplyr::select('IIP08','IIP16','IIP24','IIP32')
 
 
+#get omegas
 om_PA = omega(PA, nfactors = 1)
 om_BC = omega(BC, nfactors = 1)
 om_DE = omega(DE, nfactors = 1)
@@ -45,32 +47,35 @@ om_JK = omega(JK, nfactors = 1)
 om_LM = omega(LM, nfactors = 1)
 om_NO = omega(NO, nfactors = 1)
 
-#iip
+#iip (scored with sums)
 circum <- cbind(rowSums(PA), rowSums(BC), rowSums(DE), rowSums(FG), rowSums(HI), rowSums(JK), rowSums(LM), rowSums(NO))
-#csi
+#csiv/e (scored with means)
 circum <- cbind(rowMeans(PA), rowMeans(BC), rowMeans(DE), rowMeans(FG), rowMeans(HI), rowMeans(JK), rowMeans(LM), rowMeans(NO))
 
+#zscore all columns
 circum <- data.frame(circum) %>% mutate_all(scale)
-
+#rename
 colnames(circum) <- c('PA','BC', 'DE', 'FG', 'HI', 'JK', 'LM', 'NO')
 
-dom <-0.25((circum$PA - circum$HI) + (0.707*(circum$BC + circum$NO - circum$FG - circum$JK)))
-warm <-0.25*((circum$LM - circum$DE) + (0.707*(circum$JK + circum$NO - circum$FG - circum$BC)))
+#calculate dom, warm axes for unweighted var
+dom <- ((circum$PA - circum$HI) + (0.707*(circum$BC + circum$NO - circum$FG - circum$JK)))
+warm <-((circum$LM - circum$DE) + (0.707*(circum$JK + circum$NO - circum$FG - circum$BC)))
 
+#calculate reliabilities on subscale level
+#rel_axis = 1 - ((sigma(w**2) - sigma(w**2*octants))/var(axis))
 
-#warmth
+#dom
+d_sigwrelsc = om_PA$omega.tot*((1)**2) + om_HI$omega.tot*((1)**2) + om_BC$omega.tot*((0.707)**2) + 
+om_NO$omega.tot*((0.707)**2) + om_FG$omega.tot*((-0.707)**2)+ om_JK$omega.tot*((-0.707)**2)
+d_var_axis = (var(dom, na.rm = T))
+d_rel_axis = 1 - ((4 - d_sigwrelsc) /d_var_axis)
+
+#warm
 w_sigwrelsc = (om_LM$omega.tot*1*1) + (om_DE$omega.tot*-1*-1) + (om_JK$omega.tot*0.707*0.707) + (om_NO$omega.tot*0.707*0.707) + (om_FG$omega.tot*-0.707*-0.707)+ (om_BC$omega.tot*-0.707*-0.707)
 w_var_axis = (var(warm, na.rm = T))
 w_rel_axis = 1 - ((4 - w_sigwrelsc) /w_var_axis)
 
-d_sigwrelsc = (om_PA$omega.tot*1*1) + (om_HI$omega.tot*-1*-1) + (om_BC$omega.tot*0.707*0.707) + (om_NO$omega.tot*0.707*0.707) + (om_FG$omega.tot*-0.707*-0.707)+ (om_JK$omega.tot*-0.707*-0.707)
-d_var_axis = (var(dom, na.rm = T))
-d_rel_axis = 1 - ((4 - d_sigwrelsc) /d_var_axis)
+#elev
 
-describe(file_df1$IIPSC_ELEV)
-describe(file_df1$IIPSC_LOV)
-describe(file_df1$IIPSC_DOM)
-
-
-
+elev = (om_PA$omega.tot + om_BC$omega.tot + om_DE$omega.tot + om_FG$omega.tot + om_HI$omega.tot + om_JK$omega.tot + om_LM$omega.tot + om_NO$omega.tot)/8
 

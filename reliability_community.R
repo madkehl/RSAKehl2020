@@ -1,3 +1,6 @@
+library(psych)
+library(dplyr) 
+
 file <- read.csv('/Users/madke/downloads/IPCx3 items Kehl.csv')
 
 file_df <- data.frame(file)
@@ -55,8 +58,8 @@ circum <- data.frame(circum) %>% mutate_all(scale)
 colnames(circum) <- c('PA','BC', 'DE', 'FG', 'HI', 'JK', 'LM', 'NO')
 
 #calculate dom, warm axes
-dom <-0.25*((circum$PA - circum$HI) + (0.707*(circum$BC + circum$NO - circum$FG - circum$JK)))
-warm <-0.25*((circum$LM - circum$DE) + (0.707*(circum$JK + circum$NO - circum$FG - circum$BC)))
+dom <-((circum$PA - circum$HI) + (0.707*(circum$BC + circum$NO - circum$FG - circum$JK)))
+warm <-((circum$LM - circum$DE) + (0.707*(circum$JK + circum$NO - circum$FG - circum$BC)))
 
 #calculate reliabilities on subscale level
 #rel_axis = 1 - ((sigma(w**2) - sigma(w**2*octants))/var(axis))
@@ -64,13 +67,16 @@ d_sigwrelsc = (om_PA$omega.tot*1*1) + (om_HI$omega.tot*-1*-1) + (om_BC$omega.tot
 d_var_axis = (var(dom, na.rm = T))
 d_rel_axis = 1 - ((4 - d_sigwrelsc) /d_var_axis)
 
+#elev
+
+elev = (om_PA$omega.tot + om_BC$omega.tot + om_DE$omega.tot + om_FG$omega.tot + om_HI$omega.tot + om_JK$omega.tot + om_LM$omega.tot + om_NO$omega.tot)/8
 
 
 #warmth
 w_sigwrelsc = (om_LM$omega.tot*1*1) + (om_DE$omega.tot*-1*-1) + (om_JK$omega.tot*0.707*0.707) + (om_NO$omega.tot*0.707*0.707) + (om_FG$omega.tot*-0.707*-0.707)+ (om_BC$omega.tot*-0.707*-0.707)
 w_var_axis = (var(warm, na.rm = T))
 w_rel_axis = 1 - ((4 - w_sigwrelsc) /w_var_axis)
-file <- read.csv('/Users/madke/downloads/IPCx3_Kehl.csv')
+
 
 
 
