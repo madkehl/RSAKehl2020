@@ -44,11 +44,11 @@ file_df1 <- file_df1 %>% mutate_all(winsorize)
 #'z ~ x + x*x + y + y*y + x*y'
 
 #PRIMARY ANALYSES
-primary_w <- RSA(IIPSC_ELEV ~ CSIV_LOV + CSIE_LOV, file_df1, center = TRUE)
+primary_w <- RSA(IIPSC_ELEV ~ CSIV_LOV + CSIE_LOV, file_df1,  models = models, center = TRUE)
 primary_d <- RSA(IIPSC_ELEV ~ CSIV_DOM + CSIE_DOM, file_df1, center = TRUE)
 
 #EXPLORATORY ANALYSES I
-explor_1_w <- RSA(IIPSC_LOV ~ CSIV_LOV + CSIE_LOV, file_df1, center = TRUE)
+explor_1_w <- RSA(IIPSC_LOV ~ CSIV_LOV + CSIE_LOV, file_df1, models = models,center = TRUE)
 explor_1_d <- RSA(IIPSC_DOM ~ CSIV_DOM + CSIE_DOM, file_df1, center = TRUE)
 
 #EXPLORATORY ANALYSES II
@@ -63,11 +63,11 @@ explor_2_e <- RSA(IIPSC_ELEV~ CSIV_ELEV+ CSIE_ELEV, file_df1, center = F)
 
 #PRIMARY ANALYSES
 primary_w <- RSA(elev_iip ~ warm_csiv + warm_csie, file_df1, models = models, center = TRUE)
-primary_d <- RSA(elev_iip ~ dom_csiv + dom_csie, file_df1, center = TRUE)
+primary_d <- RSA(elev_iip ~ dom_csiv + dom_csie, file_df1,  models = models,center = TRUE)
 
 #EXPLORATORY ANALYSES I
 explor_1_w <- RSA(warm_iip ~ warm_csiv + warm_csie,  file_df1, models = models, center = TRUE)
-explor_1_d <- RSA(dom_iip ~  dom_csiv + dom_csie, center = TRUE)
+explor_1_d <- RSA(dom_iip ~  dom_csiv + dom_csie, file_df1, models = models, center = TRUE)
 
 
 #TO PRINT RESULTS FOR ANY MODEL

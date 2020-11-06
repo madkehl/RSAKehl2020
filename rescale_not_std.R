@@ -24,8 +24,9 @@ IIPSC <- file1 %>% select(IIPSC_PA, IIPSC_BC, IIPSC_DE, IIPSC_FG, IIPSC_HI,IIPSC
 IIPSC <- file1 %>% select(iipscpa, iipscbc, iipscde, iipscfg, iipschi,iipscjk,iipsclm, iipscno)
 colnames(IIPSC) <- c('IIPSC_PA', 'IIPSC_BC', 'IIPSC_DE', 'IIPSC_FG', 'IIPSC_HI','IIPSC_JK', 'IIPSC_LM', 'IIPSC_NO')
 
-CSIE <- CSIE %>% mutate_all(reCSIE)
-#CSIV <- CSIV %>% mutate_all(reCSIV)
+#CSIE <- CSIE %>% mutate_all(reCSIE)
+CSIE <- CSIE %>% mutate_all(scale)
+CSIV <- CSIV %>% mutate_all(scale)
 #for reliabilities
 IIPSC <- IIPSC%>% mutate_all(scale)
 
