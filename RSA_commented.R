@@ -4,7 +4,7 @@
 #-It gives the option to scale and winsorize the data, as included in our 
 #supplementary table
 #Note: even data that is not scaled + winsorized is centered in the RSA syntax  
-models = c("absdiff","absunc","diff","mean","additive","IA","SQD","RR","SRR","SRRR","SSQD")
+models = c("absdiff", "diff","mean","additive","IA","SQD","RR","SRR","SRRR","SSQD")
 
 
 #MODULE IMPORTS
@@ -23,8 +23,8 @@ community <- community  %>% select(IIPSC_ELEV = IIPELEV,IIPSC_DOM = IIPDOM,IIPSC
 file_df1 <- community
 file_df1 <- undergrad
 
-file_df1 <- cbind(file_df1, dom_csie, warm_csie, dom_csiv, warm_csiv, dom_iip, warm_iip, elev_iip)
-
+file_df1 <- data.frame(cbind(dom_csie,warm_csie, dom_csiv, warm_csiv, dom_iip, warm_iip, elev_iip))
+colnames(file_df1) <- c('dom_csie' ,'warm_csie', 'dom_csiv', 'warm_csiv', 'dom_iip', 'warm_iip', 'elev_iip' )
 #FOR SUPPLEMENTAL TABLE:
 #this function takes SCALED data and brings outliers in to being within three 
 #standard deviations of the mean.  

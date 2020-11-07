@@ -1,7 +1,7 @@
 library(dplyr)
 library(psych)
-file1 <- read.csv('/Users/madke/documents/051220_undergraduatesample.csv')
-file1 <- read.csv('/Users/madke/downloads/IPCx3 items Kehl.csv')
+file1 <- read.csv('~/RSAKehl2020/051220_undergraduatesample.csv')
+file1 <- read.csv('~/RSAKehl2020/IPCx3 items Kehl.csv')
 
 reCSIE <- function(x){
 
